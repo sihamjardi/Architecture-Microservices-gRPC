@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option java_package = "ma.siham.grpc.stubs";
+option java_multiple_files = true;
+
+// Enum pour le type de compte bancaire
+enum AccountType {
+  CURRENT = 0;
+  SAVINGS = 1;
+}
+
+// Message représentant un compte bancaire
+message BankAccount {
+  string id = 1;
+  float balance = 2;
+  string creationDate = 3;
+  AccountType type = 4;
+}
+
+// Message pour création ou mise à jour
+message BankAccountRequest {
+  float balance = 1;
+  string creationDate = 2;
+  AccountType type = 3;
+}
+
+// Message pour statistiques
+message BalanceStats {
+  int32 count = 1;
+  float sum = 2;
+  float average = 3;
+}
+
+// Requêtes et réponses
+message GetAllAccountsRequest {}
+message GetAllAccountsResponse { repeated BankAccount accounts = 1; }
+
+message GetAccountByIdRequest { string id = 1; }
+message GetAccountByIdResponse { BankAccount account = 1; }
+
+message GetTotalBalanceRequest {}
+message GetTotalBalanceResponse { BalanceStats stats = 1; }
+
+message SaveAccountRequest { BankAccountRequest account = 1; }
+message SaveAccountResponse { BankAccount account = 1; }
+
+// Définition du service gRPC
+service BankAccountService {
+  rpc GetAllAccounts(GetAllAccountsRequest) returns (GetAllAccountsResponse);
+  rpc GetAccountById(GetAccountByIdRequest) returns (GetAccountByIdResponse);
+  rpc GetTotalBalance(GetTotalBalanceRequest) returns (GetTotalBalanceResponse);
+  rpc SaveAccount(SaveAccountRequest) returns (SaveAccountResponse);
+}
